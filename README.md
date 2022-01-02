@@ -45,3 +45,11 @@ Preview
 **1. GC-INVENTORY (<a href="https://forum.cfx.re/t/esx-gc-inventory-free-release/2010156">Link</a>) (ESX)**
 **2. AX-INVENTORY v6 (<a href="https://forum.cfx.re/t/free-ax-inventory-rework-of-qb-inventory/4772892">Link</a>) (QBCore)**
 **3. HUD (<a href="https://forum.cfx.re/t/hud-status-free-status-hud-axfw/4764065">Link</a>) (ESX/Standalone)**
+
+
+
+**DOCS**
+ax-inv:Server:OpenInventory (Server Event)
+Usage: To Open Stash/GloveBox/Trunk
+Arguements: Stash Name,{slots=int}
+
