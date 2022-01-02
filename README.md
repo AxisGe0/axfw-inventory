@@ -50,7 +50,9 @@ Preview
 
 **DOCS**
 
-`ax-inv:Server:OpenInventory (Server Event)<br>
-Usage: To Open Stash/GloveBox/Trunk<br>
+`ax-inv:Server:OpenInventory (Server Event)
+
+Usage: To Open Stash/GloveBox/Trunk
+
 Arguements: Stash Name,{slots=int}`
 
