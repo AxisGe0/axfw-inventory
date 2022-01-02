@@ -56,3 +56,7 @@ Usage: To Open Stash/GloveBox/Trunk
 
 Arguements: Stash Name,{slots=int}
 
+> ax-inv:Server:OpenPlayerInventory (Server Event)
+Usage: To Open Player Inventory
+
+Arguments: Player ID
