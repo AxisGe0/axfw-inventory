@@ -1,23 +1,26 @@
-QBCore = nil
-TriggerEvent('QBCore:GetObject', function(obj) QBCore = obj end)
-
-
+ExecuteSql = function(ignr,query,cb)
+    local data = exports.oxmysql:fetchSync(query)
+    if cb ~= nil then
+        cb(data)
+    end
+    return data
+end
 RegisterCommand('convert',function()
-    QBCore.Functions.ExecuteSql(false,"SELECT * FROM `stashitemsnew`",function(result)
+    ExecuteSql(false,"SELECT * FROM `stashitems`",function(result)
         for k,v in pairs(result) do 
-            QBCore.Functions.ExecuteSql(true,"INSERT INTO `inventories` (`id`,`data`) VALUES ('"..v.stash.."','"..v.items.."')  ")
+            ExecuteSql(true,"INSERT INTO `inventories` (`id`,`data`) VALUES ('"..v.stash.."','"..v.items.."')  ")
         end
         print('Done Stash')
     end)
-    QBCore.Functions.ExecuteSql(false,"SELECT * FROM `gloveboxitemsnew`",function(result)
+    ExecuteSql(false,"SELECT * FROM `gloveboxitems`",function(result)
         for k,v in pairs(result) do 
-            QBCore.Functions.ExecuteSql(true,"INSERT INTO `inventories` (`id`,`data`) VALUES ('GloveBox-"..v.plate:gsub(' ','').."','"..v.items.."')  ")
+            ExecuteSql(true,"INSERT INTO `inventories` (`id`,`data`) VALUES ('GloveBox-"..v.plate:gsub(' ','').."','"..v.items.."')  ")
         end
         print('Done GloveBox')
     end)
-    QBCore.Functions.ExecuteSql(false,"SELECT * FROM `trunkitemsnew`",function(result)
+    ExecuteSql(false,"SELECT * FROM `trunkitems`",function(result)
         for k,v in pairs(result) do 
-            QBCore.Functions.ExecuteSql(true,"INSERT INTO `inventories` (`id`,`data`) VALUES ('Trunk-"..v.plate:gsub(' ','').."','"..v.items.."')  ")
+            ExecuteSql(true,"INSERT INTO `inventories` (`id`,`data`) VALUES ('Trunk-"..v.plate:gsub(' ','').."','"..v.items.."')  ")
         end
         print('Done Trunk')
     end)
