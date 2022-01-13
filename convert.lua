@@ -5,7 +5,8 @@ ExecuteSql = function(ignr,query,cb)
     end
     return data
 end
-RegisterCommand('convert',function()
+RegisterCommand('convert',function(source,args)
+    if source ~=0 then return end
     ExecuteSql(false,"SELECT * FROM `stashitems`",function(result)
         for k,v in pairs(result) do 
             ExecuteSql(true,"INSERT INTO `inventories` (`id`,`data`) VALUES ('"..v.stash.."','"..v.items.."')  ")
