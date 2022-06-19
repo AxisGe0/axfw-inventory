@@ -99,3 +99,72 @@ end)
 RegisterNUICallback('CraftItem', function(data)
     TriggerServerEvent('ax-inv:Server:CraftItem',data)
 end)
+
+----------
+----------QB-WEAPONS SUPPORT
+local currentWeapon = nil
+local CurrentWeaponData = {}
+RegisterNetEvent('weapons:client:SetCurrentWeapon', function(data, _)
+    CurrentWeaponData = data or {}
+end)
+
+RegisterNetEvent('inventory:client:UseSnowball', function(amount)
+    local ped = PlayerPedId()
+    GiveWeaponToPed(ped, `weapon_snowball`, amount, false, false)
+    SetPedAmmo(ped, `weapon_snowball`, amount)
+    SetCurrentPedWeapon(ped, `weapon_snowball`, true)
+end)
+
+RegisterNetEvent('inventory:client:UseWeapon', function(weaponData, shootbool)
+    local ped = PlayerPedId()
+    local weaponName = tostring(weaponData.name)
+    if currentWeapon == weaponName then
+        SetCurrentPedWeapon(ped, `WEAPON_UNARMED`, true)
+        RemoveAllPedWeapons(ped, true)
+        TriggerEvent('weapons:client:SetCurrentWeapon', nil, shootbool)
+        currentWeapon = nil
+    elseif weaponName == "weapon_stickybomb" or weaponName == "weapon_pipebomb" or weaponName == "weapon_smokegrenade" or weaponName == "weapon_flare" or weaponName == "weapon_proxmine" or weaponName == "weapon_ball"  or weaponName == "weapon_molotov" or weaponName == "weapon_grenade" or weaponName == "weapon_bzgas" then
+        GiveWeaponToPed(ped, GetHashKey(weaponName), 1, false, false)
+        SetPedAmmo(ped, GetHashKey(weaponName), 1)
+        SetCurrentPedWeapon(ped, GetHashKey(weaponName), true)
+        TriggerEvent('weapons:client:SetCurrentWeapon', weaponData, shootbool)
+        currentWeapon = weaponName
+    elseif weaponName == "weapon_snowball" then
+        GiveWeaponToPed(ped, GetHashKey(weaponName), 10, false, false)
+        SetPedAmmo(ped, GetHashKey(weaponName), 10)
+        SetCurrentPedWeapon(ped, GetHashKey(weaponName), true)
+        TriggerServerEvent('QBCore:Server:RemoveItem', weaponName, 1)
+        TriggerEvent('weapons:client:SetCurrentWeapon', weaponData, shootbool)
+        currentWeapon = weaponName
+    else
+        TriggerEvent('weapons:client:SetCurrentWeapon', weaponData, shootbool)
+        QBCore.Functions.TriggerCallback("weapon:server:GetWeaponAmmo", function(result, name)
+            local ammo = tonumber(result)
+            if weaponName == "weapon_petrolcan" or weaponName == "weapon_fireextinguisher" then
+                ammo = 4000
+            end
+	    if name ~= weaponName then
+                ammo = 0
+            end
+            GiveWeaponToPed(ped, GetHashKey(weaponName), 0, false, false)
+            SetPedAmmo(ped, GetHashKey(weaponName), ammo)
+            SetCurrentPedWeapon(ped, GetHashKey(weaponName), true)
+            if weaponData.info.attachments ~= nil then
+                for _, attachment in pairs(weaponData.info.attachments) do
+                    GiveWeaponComponentToPed(ped, GetHashKey(weaponName), GetHashKey(attachment.component))
+                end
+            end
+            currentWeapon = weaponName
+        end, CurrentWeaponData)
+    end
+end)
+
+RegisterNetEvent('inventory:client:CheckWeapon', function(weaponName)
+    local ped = PlayerPedId()
+    if currentWeapon == weaponName then
+        TriggerEvent('weapons:ResetHolster')
+        SetCurrentPedWeapon(ped, `WEAPON_UNARMED`, true)
+        RemoveAllPedWeapons(ped, true)
+        currentWeapon = nil
+    end
+end)
